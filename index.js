@@ -1,28 +1,29 @@
-const contacts = require("./contacts");
+const express = require("express");
+const morgan = require("morgan");
+const cors = require("cors");
+var fs = require("fs");
+var path = require("path");
 
-const argv = require("yargs").argv;
+// Файл, для збереження історії запитів
+const accessLogPath = path.join(__dirname, "db", "access.log");
+const accessLogStream = fs.createWriteStream(accessLogPath, {
+  flags: "a",
+});
 
-function invokeAction({ action, id, name, email, phone }) {
-  switch (action) {
-    case "list":
-      contacts.listContacts();
-      break;
+const { contactRouter } = require("./contact/contact.router");
 
-    case "get":
-      contacts.getContactById(id);
-      break;
+const app = express();
 
-    case "add":
-      contacts.addContact(name, email, phone);
-      break;
+const PORT = 3000;
+const corsOptions = {
+  origin: "*",
+};
 
-    case "remove":
-      contacts.removeContact(id);
-      break;
+app.use(cors(corsOptions));
+app.use(express.json());
+app.use(morgan("combined", { stream: accessLogStream }));
+app.use("/api/contacts", contactRouter);
 
-    default:
-      console.warn("\x1B[31m Unknown action type!");
-  }
-}
-
-invokeAction(argv);
+app.listen(PORT, () => {
+  console.log(`Server listening on ${PORT} port`);
+});
