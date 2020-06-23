@@ -1,7 +1,7 @@
 {
-  "name": "nodejs-homework-01",
+  "name": "nodejs-homework-03",
   "version": "1.0.0",
-  "description": "Homework-01 goit-NodeJS",
+  "description": "Homework-03 goit-NodeJS",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
