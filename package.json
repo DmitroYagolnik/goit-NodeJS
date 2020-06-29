@@ -4,8 +4,8 @@
   "description": "Homework-03 goit-NodeJS",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
+    "start": "node -r esm index.js",
+    "dev": "nodemon -r esm index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,10 +18,15 @@
     "url": "https://github.com/DmitroYagolnik/goit-NodeJS/issues"
   },
   "homepage": "https://github.com/DmitroYagolnik/goit-NodeJS",
-  "devDependencies": {
-    "nodemon": "^2.0.4"
-  },
+  "devDependencies": {},
   "dependencies": {
+    "@hapi/joi": "^17.1.1",
+    "cors": "^2.8.5",
+    "esm": "^3.2.25",
+    "express": "^4.17.1",
+    "mongoose": "^5.9.20",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.4",
     "yargs": "^15.3.1"
   }
 }
