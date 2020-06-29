@@ -1,28 +1,45 @@
-const contacts = require("./contacts");
+require = require("esm")(module);
 
-const argv = require("yargs").argv;
+import express from "express";
+import morgan from "morgan";
+import cors from "cors";
+import mongoose from "mongoose";
 
-function invokeAction({ action, id, name, email, phone }) {
-  switch (action) {
-    case "list":
-      contacts.listContacts();
-      break;
+/* Модуль "dotenv" не було встановлено, з метою,
+щоб можна було б перевірити роботу БД,
+використовуючи пароль розробника.
+Крім того, зайти в БД можна з будь-якого IP */
 
-    case "get":
-      contacts.getContactById(id);
-      break;
+import contactRouter from "./contact/contact.router";
 
-    case "add":
-      contacts.addContact(name, email, phone);
-      break;
+const app = express();
+const PORT = process.env.PORT || 3000;
+const corsOptions = {
+  origin: "*",
+};
 
-    case "remove":
-      contacts.removeContact(id);
-      break;
+const startServer = async () => {
+  const DB_URI =
+    "mongodb+srv://GOIT_user:tuHjugAtB4qvLFyf@cluster0-m6glh.mongodb.net/db-contacts?retryWrites=true&w=majority";
+  try {
+    await mongoose.connect(DB_URI, {
+      useUnifiedTopology: true,
+      useFindAndModify: false,
+    });
+    console.log("Database connection successful");
 
-    default:
-      console.warn("\x1B[31m Unknown action type!");
+    app.use(cors(corsOptions));
+    app.use(express.json());
+    app.use(morgan("combined"));
+    app.use("/api/contacts", contactRouter);
+
+    app.listen(PORT, () => {
+      console.log(`Server listening on ${PORT} port`);
+    });
+  } catch (error) {
+    console.log("error", error);
+    process.exit(1);
   }
-}
+};
 
-invokeAction(argv);
+startServer();
